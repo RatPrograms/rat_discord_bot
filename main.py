@@ -57,22 +57,17 @@ async def new_client(ctx, user: discord.User):
     guild = ctx.guild
     category_name = "Settlers"
     category = discord.utils.get(guild.categories, name=category_name)
-
     role = discord.utils.get(guild.roles, name="RatBot User")
-
-    
     if category is None:
         await ctx.send(f"Category {category_name} not found.")
         return
         
-    overwrites = {
-        guild.default_role: discord.PermissionOverwrite(view_channel=False),
-        user: discord.PermissionOverwrite(view_channel=True),
-    }
     existing_channel = discord.utils.get(category.channels, name=username)
 
     if not existing_channel:
-        await guild.create_text_channel(username, overwrites=overwrites, category=category)
+        new_channel = await guild.create_text_channel(username, category=category)
+        await new_channel.set_permissions(guild.default_role, view_channel=False)  # Deny access to @everyone
+        await new_channel.set_permissions(user, view_channel=True)
         await ctx.send(f"Channel {username} has been created")
     else:
         await ctx.send(f"Channel with that name already exists")
@@ -81,7 +76,6 @@ async def new_client(ctx, user: discord.User):
 async def on_guild_join(guild):
     role_name="RatBot User"
     permissions = discord.Permissions(permissions=0)
-
     existing_role = discord.utils.get(guild.roles, name=role_name)
     if existing_role is None:
         await guild.create_role(name=role_name, permissions=permissions)
