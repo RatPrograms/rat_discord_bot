@@ -57,7 +57,6 @@ async def new_client(ctx, user: discord.User):
     guild = ctx.guild
     category_name = "Settlers"
     category = discord.utils.get(guild.categories, name=category_name)
-    role = discord.utils.get(guild.roles, name="RatBot User")
     if category is None:
         await ctx.send(f"Category {category_name} not found.")
         return
