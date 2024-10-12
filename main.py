@@ -52,7 +52,7 @@ async def new_client(ctx, user: discord.User):
     if user is None:
         await ctx.send("User not found. Please mention a valid user.")
         return
-    user_id = user.id
+    
     username = user.name
     guild = ctx.guild
     category_name = "Settlers"
